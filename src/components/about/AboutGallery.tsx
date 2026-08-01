@@ -1,12 +1,10 @@
 "use client";
 
 import { useRef } from "react";
-import Image from "next/image";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { GalleryImage } from "@/lib/strapi";
-import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -36,15 +34,9 @@ export default function AboutGallery({ headings, images }: AboutGalleryProps) {
   const activeCards = useRef<CardData[]>([]);
   const currentSection = useRef(0);
   const isAnimating = useRef(false);
-  const reducedMotion = useReducedMotion();
 
   useGSAP(
     () => {
-      // This entire section is a continuous scroll-jacked card-swap
-      // animation with no non-JS content underneath it — skip it and render
-      // the static grid below instead for prefers-reduced-motion.
-      if (reducedMotion) return;
-
       const section = sectionRef.current;
       const heading = headingRef.current;
       if (!section || !heading || images.length === 0) return;
@@ -209,29 +201,10 @@ export default function AboutGallery({ headings, images }: AboutGalleryProps) {
       };
     },
     {
-      dependencies: [JSON.stringify(images), JSON.stringify(headings), reducedMotion],
+      dependencies: [JSON.stringify(images), JSON.stringify(headings)],
       revertOnUpdate: true,
     }
   );
-
-  if (reducedMotion) {
-    return (
-      <section className="about-gallery about-gallery--static">
-        {headings.map((h, i) => (
-          <h2 key={i} className="about-gallery__static-heading">
-            {h}
-          </h2>
-        ))}
-        <div className="about-gallery__static-grid">
-          {images.map((img, i) => (
-            <div key={i} className="about-gallery__static-item">
-              <Image src={img.src} alt={img.alt} fill sizes="(max-width: 768px) 45vw, 200px" />
-            </div>
-          ))}
-        </div>
-      </section>
-    );
-  }
 
   return (
     <section ref={sectionRef} className="about-gallery">

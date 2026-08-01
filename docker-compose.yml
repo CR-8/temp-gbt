@@ -37,10 +37,23 @@ services:
       STRAPI_API_TOKEN: ${STRAPI_API_TOKEN:-}
       STRAPI_REVALIDATE_SECRET: ${STRAPI_REVALIDATE_SECRET:-change-me-to-a-random-string}
       REDIS_URL: redis://redis:6379
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    depends_on:
+      - web
     ports:
-      - "3000:3000"
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
 
 volumes:
   redis_data:
   cms_uploads:
   cms_data:
+  caddy_data:
+  caddy_config:

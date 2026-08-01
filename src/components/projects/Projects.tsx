@@ -6,7 +6,6 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import ProjectCard from "./ProjectCard";
 import type { Project } from "@/lib/strapi";
-import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -19,15 +18,9 @@ interface ProjectsProps {
 
 export default function Projects({ projects }: ProjectsProps) {
   const sectionRef = useRef<HTMLElement>(null);
-  const reducedMotion = useReducedMotion();
 
   useGSAP(
     () => {
-      // Scroll-jacking a pinned, scrubbed animation is exactly the kind of
-      // motion prefers-reduced-motion is meant to suppress — fall back to
-      // the plain static stack rendered below instead.
-      if (reducedMotion) return;
-
       const section = sectionRef.current;
       if (!section) return;
 
@@ -78,11 +71,11 @@ export default function Projects({ projects }: ProjectsProps) {
 
       ScrollTrigger.refresh();
     },
-    { scope: sectionRef, dependencies: [projects.length, reducedMotion], revertOnUpdate: true }
+    { scope: sectionRef, dependencies: [projects.length], revertOnUpdate: true }
   );
 
   return (
-    <section ref={sectionRef} className={`projects ${reducedMotion ? "projects--static" : ""}`}>
+    <section ref={sectionRef} className="projects">
       {projects.map((project, i) => (
         <ProjectCard
           key={project.id}

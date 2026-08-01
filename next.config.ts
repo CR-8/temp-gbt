@@ -26,6 +26,10 @@ const nextConfig: NextConfig = {
         hostname: "picsum.photos",
       },
     ],
+    // Local dev points NEXT_PUBLIC_STRAPI_URL at localhost:1337, which
+    // Next 16 blocks by default (SSRF hardening treats any private/loopback
+    // IP as untrusted). Safe here since it's only ever a private-network URL.
+    dangerouslyAllowLocalIP: true,
   },
 };
 

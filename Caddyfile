@@ -1,0 +1,10 @@
+# Apex domain redirects to www — Caddy issues/renews TLS for both
+# automatically via Let's Encrypt as long as DNS for both points here.
+roboticsclubsrmcem.in {
+	redir https://www.roboticsclubsrmcem.in{uri} permanent
+}
+
+www.roboticsclubsrmcem.in {
+	encode gzip zstd
+	reverse_proxy web:3000
+}
