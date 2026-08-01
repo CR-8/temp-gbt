@@ -15,8 +15,6 @@ services:
     volumes:
       - cms_uploads:/opt/app/public/uploads
       - cms_data:/opt/app/.tmp
-    ports:
-      - "1337:1337"
 
   web:
     build: .
@@ -29,7 +27,8 @@ services:
       # Server-side Strapi calls go over the internal Docker network...
       STRAPI_INTERNAL_URL: http://cms:1337
       # ...but media URLs sent to the browser need a host it can resolve —
-      # point this at wherever the CMS is actually reachable publicly.
+      # point this at wherever the CMS is actually reachable publicly
+      # (now the cms.* Caddy route, not a raw port).
       NEXT_PUBLIC_STRAPI_URL: ${PUBLIC_STRAPI_URL:-http://localhost:1337}
       # Used for metadataBase, sitemap.xml, and robots.txt — point this at
       # the public URL the site is actually served from.
@@ -43,6 +42,7 @@ services:
     restart: unless-stopped
     depends_on:
       - web
+      - cms
     ports:
       - "80:80"
       - "443:443"

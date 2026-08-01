@@ -8,3 +8,8 @@ www.roboticsclubsrmcem.in {
 	encode gzip zstd
 	reverse_proxy web:3000
 }
+
+cms.roboticsclubsrmcem.in {
+	encode gzip zstd
+	reverse_proxy cms:1337
+}
