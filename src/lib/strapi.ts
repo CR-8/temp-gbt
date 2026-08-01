@@ -154,12 +154,16 @@ async function strapiFetch<T>(path: string, { cacheKey, tag }: { cacheKey: strin
       headers,
       next: { revalidate: REVALIDATE_SECONDS, tags: [tag] },
     });
-    if (!res.ok) return null;
+    if (!res.ok) {
+      console.error(`[strapi] ${path} -> ${res.status} ${res.statusText}`);
+      return null;
+    }
     const json = await res.json();
     const data = (json?.data ?? null) as T | null;
     if (data) await cacheSet(cacheKey, data, REDIS_TTL_SECONDS);
     return data;
-  } catch {
+  } catch (err) {
+    console.error(`[strapi] ${path} failed:`, err);
     return null;
   }
 }
