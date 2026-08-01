@@ -1,0 +1,33 @@
+
+> gbt-wst@0.1.0 build
+> next build
+
+▲ Next.js 16.2.12 (Turbopack)
+- Environments: .env.local
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 42s
+  Running TypeScript ...
+  Finished TypeScript in 2.5min ...
+  Collecting page data using 9 workers ...
+  Generating static pages using 9 workers (0/7) ...
+  Generating static pages using 9 workers (1/7) 
+  Generating static pages using 9 workers (3/7) 
+[redis] connection error: 
+  Generating static pages using 9 workers (5/7) 
+✓ Generating static pages using 9 workers (7/7) in 9.0s
+  Finalizing page optimization ...
+
+Route (app)            Revalidate  Expire
+┌ ○ /                          1m      1y
+├ ○ /_not-found
+├ ƒ /api/revalidate
+├ ƒ /api/spline-scene
+├ ƒ /api/unicorn-sdk
+├ ○ /team                      1m      1y
+└ ƒ /team/[id]
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

@@ -1,0 +1,46 @@
+services:
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+
+  cms:
+    build: ./cms
+    restart: unless-stopped
+    env_file:
+      - ./cms/.env
+    environment:
+      NODE_ENV: production
+    volumes:
+      - cms_uploads:/opt/app/public/uploads
+      - cms_data:/opt/app/.tmp
+    ports:
+      - "1337:1337"
+
+  web:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      - cms
+      - redis
+    environment:
+      NODE_ENV: production
+      # Server-side Strapi calls go over the internal Docker network...
+      STRAPI_INTERNAL_URL: http://cms:1337
+      # ...but media URLs sent to the browser need a host it can resolve —
+      # point this at wherever the CMS is actually reachable publicly.
+      NEXT_PUBLIC_STRAPI_URL: ${PUBLIC_STRAPI_URL:-http://localhost:1337}
+      # Used for metadataBase, sitemap.xml, and robots.txt — point this at
+      # the public URL the site is actually served from.
+      NEXT_PUBLIC_SITE_URL: ${PUBLIC_SITE_URL:-http://localhost:3000}
+      STRAPI_API_TOKEN: ${STRAPI_API_TOKEN:-}
+      STRAPI_REVALIDATE_SECRET: ${STRAPI_REVALIDATE_SECRET:-change-me-to-a-random-string}
+      REDIS_URL: redis://redis:6379
+    ports:
+      - "3000:3000"
+
+volumes:
+  redis_data:
+  cms_uploads:
+  cms_data:

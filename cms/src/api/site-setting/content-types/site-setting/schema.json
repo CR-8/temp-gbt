@@ -1,0 +1,77 @@
+{
+  "kind": "singleType",
+  "collectionName": "site_settings",
+  "info": {
+    "singularName": "site-setting",
+    "pluralName": "site-settings",
+    "displayName": "Site Settings",
+    "description": "Global brand, hero, navbar and footer content for the site"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "brandName": {
+      "type": "string",
+      "required": true
+    },
+    "brandTagline": {
+      "type": "string"
+    },
+    "heroTitle": {
+      "type": "string",
+      "required": true
+    },
+    "heroUnicornProjectId": {
+      "type": "string"
+    },
+    "heroUnicornSdkUrl": {
+      "type": "string"
+    },
+    "heroFooterItems": {
+      "type": "json"
+    },
+    "navbarLinks": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.link"
+    },
+    "footerPhone": {
+      "type": "string"
+    },
+    "footerEmail": {
+      "type": "string"
+    },
+    "footerLinks": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.link"
+    },
+    "footerSocial": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.link"
+    },
+    "footerLegal": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.link"
+    },
+    "teamPreviewLabel": {
+      "type": "string"
+    },
+    "teamPreviewFeaturedBatch": {
+      "type": "string"
+    },
+    "teamPreviewCtaLabel": {
+      "type": "string"
+    },
+    "teamPreviewCtaHref": {
+      "type": "string"
+    },
+    "achievementsLabel": {
+      "type": "string"
+    }
+  }
+}

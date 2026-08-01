@@ -1,0 +1,60 @@
+{
+  "kind": "collectionType",
+  "collectionName": "projects",
+  "info": {
+    "singularName": "project",
+    "pluralName": "projects",
+    "displayName": "Project",
+    "description": "Showcased robots/projects"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "tag": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "color": {
+      "type": "string"
+    },
+    "sortOrder": {
+      "type": "integer",
+      "default": 0
+    },
+    "year": {
+      "type": "integer"
+    },
+    "longDescription": {
+      "type": "text"
+    },
+    "gallery": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": ["images"]
+    },
+    "highlights": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.feature-card"
+    },
+    "githubUrl": {
+      "type": "string"
+    },
+    "demoUrl": {
+      "type": "string"
+    }
+  }
+}

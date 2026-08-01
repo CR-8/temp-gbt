@@ -1,0 +1,40 @@
+{
+  "kind": "singleType",
+  "collectionName": "abouts",
+  "info": {
+    "singularName": "about",
+    "pluralName": "abouts",
+    "displayName": "About",
+    "description": "About section: intro, scroll gallery and outro CTA"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "introHeading": {
+      "type": "text",
+      "required": true
+    },
+    "introSubheading": {
+      "type": "string"
+    },
+    "outroHeading": {
+      "type": "string"
+    },
+    "outroCtaLabel": {
+      "type": "string"
+    },
+    "outroCtaHref": {
+      "type": "string"
+    },
+    "galleryHeadings": {
+      "type": "json"
+    },
+    "galleryImages": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": ["images"]
+    }
+  }
+}

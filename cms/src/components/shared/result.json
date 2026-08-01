@@ -1,0 +1,22 @@
+{
+  "collectionName": "components_shared_results",
+  "info": {
+    "displayName": "Result",
+    "icon": "trophy"
+  },
+  "options": {},
+  "attributes": {
+    "event": {
+      "type": "string",
+      "required": true
+    },
+    "category": {
+      "type": "string"
+    },
+    "position": {
+      "type": "integer",
+      "required": true,
+      "min": 1
+    }
+  }
+}
