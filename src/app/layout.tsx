@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:5173";
 const SITE_NAME = "Grobots";
 const SITE_TITLE = "Grobots — Where Gears Flex More Than Muscles";
 const SITE_DESCRIPTION =

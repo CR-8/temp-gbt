@@ -32,7 +32,8 @@ services:
       NEXT_PUBLIC_STRAPI_URL: ${PUBLIC_STRAPI_URL:-http://localhost:1337}
       # Used for metadataBase, sitemap.xml, and robots.txt — point this at
       # the public URL the site is actually served from.
-      NEXT_PUBLIC_SITE_URL: ${PUBLIC_SITE_URL:-http://localhost:3000}
+      NEXT_PUBLIC_SITE_URL: ${PUBLIC_SITE_URL:-http://localhost:5173}
+      PORT: "5173"
       STRAPI_API_TOKEN: ${STRAPI_API_TOKEN:-}
       STRAPI_REVALIDATE_SECRET: ${STRAPI_REVALIDATE_SECRET:-change-me-to-a-random-string}
       REDIS_URL: redis://redis:6379

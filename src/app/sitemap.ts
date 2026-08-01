@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { getTeamMembers, getProjects, getArticles } from "@/lib/strapi";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:5173";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [members, projects, articles] = await Promise.all([getTeamMembers(), getProjects(), getArticles()]);
