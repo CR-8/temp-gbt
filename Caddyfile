@@ -6,10 +6,10 @@ roboticsclubsrmcem.in {
 
 www.roboticsclubsrmcem.in {
 	encode gzip zstd
-	reverse_proxy web:5173
+	reverse_proxy localhost:5173
 }
 
 cms.roboticsclubsrmcem.in {
 	encode gzip zstd
-	reverse_proxy cms:1337
+	reverse_proxy localhost:1337
 }

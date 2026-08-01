@@ -15,7 +15,6 @@ function strapiRemotePattern() {
 }
 
 const nextConfig: NextConfig = {
-  output: "standalone",
   images: {
     remotePatterns: [
       strapiRemotePattern(),
