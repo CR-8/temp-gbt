@@ -1603,8 +1603,9 @@ a, p {
 }
 
 .project-highlight__title {
-  font-family: 'LK_Ternima', sans-serif;
+  font-family: 'Instrument Serif', serif;
   font-size: 1.4rem;
+  font-weight: 600;
 }
 
 .project-highlight__desc {
