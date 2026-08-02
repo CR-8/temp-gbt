@@ -12,6 +12,9 @@
     "metaDescription": {
       "type": "text"
     },
+    "keywords": {
+      "type": "text"
+    },
     "shareImage": {
       "type": "media",
       "multiple": false,

@@ -12,6 +12,8 @@
     "start": "strapi start",
     "strapi": "strapi",
     "seed": "node scripts/seed.cjs",
+    "seed:blogs": "node scripts/seed-blogs.js",
+    "seed:achievements": "node scripts/seed-achievements.js",
     "upgrade": "npx @strapi/upgrade latest",
     "upgrade:dry": "npx @strapi/upgrade latest --dry"
   },
