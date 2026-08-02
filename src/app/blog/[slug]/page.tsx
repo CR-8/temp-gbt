@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { draftMode } from "next/headers";
 import { getArticleBySlug, getArticles } from "@/lib/strapi";
 import BlogPostClient from "./BlogPostClient";
 
@@ -20,6 +21,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const [article, articles] = await Promise.all([getArticleBySlug(slug), getArticles()]);
+  const { isEnabled: draft } = await draftMode();
+  const [article, articles] = await Promise.all([getArticleBySlug(slug, draft), getArticles(draft)]);
   return <BlogPostClient article={article} articles={articles} />;
 }

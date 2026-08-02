@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { draftMode } from "next/headers";
 import { getTeamMembers } from "@/lib/strapi";
 import MemberPageClient from "./MemberPageClient";
 
@@ -16,6 +17,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
 export default async function MemberPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const members = await getTeamMembers();
+  const { isEnabled: draft } = await draftMode();
+  const members = await getTeamMembers(draft);
   return <MemberPageClient members={members} id={id} />;
 }

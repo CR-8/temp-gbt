@@ -142,28 +142,40 @@ export function strapiMediaUrl(media: StrapiMedia | null | undefined): string {
   return media.url.startsWith("http") ? media.url : `${STRAPI_PUBLIC_URL}${media.url}`;
 }
 
-async function strapiFetch<T>(path: string, { cacheKey, tag }: { cacheKey: string; tag: string }): Promise<T | null> {
-  const cached = await cacheGet<T>(cacheKey);
-  if (cached) return cached;
+async function strapiFetch<T>(
+  path: string,
+  { cacheKey, tag, draft = false }: { cacheKey: string; tag: string; draft?: boolean }
+): Promise<T | null> {
+  // Draft requests are per-editor and change while they're actively typing,
+  // so neither cache layer applies — every other layer (Redis, Next's fetch
+  // cache) is shared across all visitors and would leak unpublished content
+  // or go stale mid-edit.
+  if (!draft) {
+    const cached = await cacheGet<T>(cacheKey);
+    if (cached) return cached;
+  }
 
   const headers: Record<string, string> = {};
   if (STRAPI_API_TOKEN) headers.Authorization = `Bearer ${STRAPI_API_TOKEN}`;
+  else if (draft) console.error("[strapi] draft preview requested but STRAPI_API_TOKEN is not set");
+
+  const url = draft ? `${path}${path.includes("?") ? "&" : "?"}status=draft` : path;
 
   try {
-    const res = await fetch(`${STRAPI_INTERNAL_URL}/api${path}`, {
+    const res = await fetch(`${STRAPI_INTERNAL_URL}/api${url}`, {
       headers,
-      next: { revalidate: REVALIDATE_SECONDS, tags: [tag] },
+      ...(draft ? { cache: "no-store" as const } : { next: { revalidate: REVALIDATE_SECONDS, tags: [tag] } }),
     });
     if (!res.ok) {
-      console.error(`[strapi] ${path} -> ${res.status} ${res.statusText}`);
+      console.error(`[strapi] ${url} -> ${res.status} ${res.statusText}`);
       return null;
     }
     const json = await res.json();
     const data = (json?.data ?? null) as T | null;
-    if (data) await cacheSet(cacheKey, data, REDIS_TTL_SECONDS);
+    if (data && !draft) await cacheSet(cacheKey, data, REDIS_TTL_SECONDS);
     return data;
   } catch (err) {
-    console.error(`[strapi] ${path} failed:`, err);
+    console.error(`[strapi] ${url} failed:`, err);
     return null;
   }
 }
@@ -184,10 +196,11 @@ function flattenLinks(links: unknown): LinkItem[] {
   });
 }
 
-export async function getSiteSettings(): Promise<SiteSettings | null> {
+export async function getSiteSettings(draft = false): Promise<SiteSettings | null> {
   const raw = await strapiFetch<StrapiRawEntry>("/site-setting?populate=*", {
     cacheKey: "strapi:site-setting",
     tag: "site-setting",
+    draft,
   });
   if (!raw) return null;
   return {
@@ -211,10 +224,11 @@ export async function getSiteSettings(): Promise<SiteSettings | null> {
   };
 }
 
-export async function getAbout(): Promise<AboutData | null> {
+export async function getAbout(draft = false): Promise<AboutData | null> {
   const raw = await strapiFetch<StrapiRawEntry>("/about?populate=*", {
     cacheKey: "strapi:about",
     tag: "about",
+    draft,
   });
   if (!raw) return null;
   return {
@@ -239,10 +253,11 @@ function flattenFeatureCards(cards: unknown): FeatureCard[] {
   });
 }
 
-export async function getProjects(): Promise<Project[]> {
+export async function getProjects(draft = false): Promise<Project[]> {
   const raw = await strapiFetch<StrapiRawEntry[]>("/projects?populate=*&sort=sortOrder:asc", {
     cacheKey: "strapi:projects",
     tag: "projects",
+    draft,
   });
   return (raw ?? []).map((p) => ({
     id: entryId(p.id),
@@ -261,10 +276,11 @@ export async function getProjects(): Promise<Project[]> {
   }));
 }
 
-export async function getAchievements(): Promise<Achievement[]> {
+export async function getAchievements(draft = false): Promise<Achievement[]> {
   const raw = await strapiFetch<StrapiRawEntry[]>("/achievements?populate=*", {
     cacheKey: "strapi:achievements",
     tag: "achievements",
+    draft,
   });
   return (raw ?? []).map((a) => ({
     id: entryId(a.id),
@@ -285,10 +301,10 @@ export async function getAchievements(): Promise<Achievement[]> {
   }));
 }
 
-export async function getTeamMembers(): Promise<TeamMember[]> {
+export async function getTeamMembers(draft = false): Promise<TeamMember[]> {
   const raw = await strapiFetch<StrapiRawEntry[]>(
     "/team-members?populate=*&pagination[pageSize]=200&sort=sortOrder:asc",
-    { cacheKey: "strapi:team-members", tag: "team-members" }
+    { cacheKey: "strapi:team-members", tag: "team-members", draft }
   );
   return (raw ?? []).map((m) => ({
     id: entryId(m.id),
@@ -341,18 +357,19 @@ function mapArticle(a: StrapiRawEntry): Article {
   };
 }
 
-export async function getArticles(): Promise<Article[]> {
+export async function getArticles(draft = false): Promise<Article[]> {
   const raw = await strapiFetch<StrapiRawEntry[]>(`/articles?${ARTICLE_POPULATE}&sort=publishedDate:desc`, {
     cacheKey: "strapi:articles",
     tag: "articles",
+    draft,
   });
   return (raw ?? []).map(mapArticle);
 }
 
-export async function getArticleBySlug(slug: string): Promise<Article | null> {
+export async function getArticleBySlug(slug: string, draft = false): Promise<Article | null> {
   const raw = await strapiFetch<StrapiRawEntry[]>(
     `/articles?filters[slug][$eq]=${encodeURIComponent(slug)}&${ARTICLE_POPULATE}`,
-    { cacheKey: `strapi:article:${slug}`, tag: `article:${slug}` }
+    { cacheKey: `strapi:article:${slug}`, tag: `article:${slug}`, draft }
   );
   const first = raw?.[0];
   return first ? mapArticle(first) : null;

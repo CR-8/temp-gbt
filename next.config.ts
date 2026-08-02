@@ -15,6 +15,17 @@ function strapiRemotePattern() {
 }
 
 const nextConfig: NextConfig = {
+  async headers() {
+    // Strapi's admin panel embeds this site in an iframe for Preview; without
+    // this the browser's default frame-ancestors ('self') blocks it.
+    const strapiOrigin = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
+    return [
+      {
+        source: "/:path*",
+        headers: [{ key: "Content-Security-Policy", value: `frame-ancestors 'self' ${strapiOrigin}` }],
+      },
+    ];
+  },
   images: {
     remotePatterns: [
       strapiRemotePattern(),

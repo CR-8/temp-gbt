@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { draftMode } from "next/headers";
 import { getProjects } from "@/lib/strapi";
 import ProjectPageClient from "./ProjectPageClient";
 
@@ -16,6 +17,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
 export default async function ProjectPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const projects = await getProjects();
+  const { isEnabled: draft } = await draftMode();
+  const projects = await getProjects(draft);
   return <ProjectPageClient projects={projects} id={id} />;
 }

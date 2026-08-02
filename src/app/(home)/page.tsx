@@ -1,13 +1,15 @@
+import { draftMode } from "next/headers";
 import { getSiteSettings, getAbout, getProjects, getAchievements, getTeamMembers } from "@/lib/strapi";
 import HomeClient from "./HomeClient";
 
 export default async function Home() {
+  const { isEnabled: draft } = await draftMode();
   const [site, about, projects, achievements, team] = await Promise.all([
-    getSiteSettings(),
-    getAbout(),
-    getProjects(),
-    getAchievements(),
-    getTeamMembers(),
+    getSiteSettings(draft),
+    getAbout(draft),
+    getProjects(draft),
+    getAchievements(draft),
+    getTeamMembers(draft),
   ]);
 
   if (!site || !about) {
